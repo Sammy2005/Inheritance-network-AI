@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="utf-8">
+<head>
+	<title>Inheritance</title>
+	<link rel="stylesheet" href="w3.css">
+</head>
+
+<body>
+<main class="w3-row">
+
+<div class="w3-third">
+	<h4 class="w3-green w3-margin w3-padding">Data Input stream</h4>
+	<div class="w3-card-2" id="input">
+		
+	</div>
+</div>
+
+	<div class="w3-card-4 w3-third">
+		<h4 class="w3-green w3-margin w3-padding">Hierarchy algorithms on Inheritance</h4>
+
+		<form class="w3-container w3-padding">
+				<div class="">
+					<label class="w3-label">Add Clause Statement [eg: herbivore IS-A mammal]</label>
+					<input type="text" name="clause" class="w3-input" id="clause">
+				</div>
+				<button type="button" class="w3-btn w3-green w3-margin" id="submitClause">Process...</button>
+		</form>
+
+		<form class="w3-container w3-padding">
+			<div class="">
+				<label class="w3-label">Add Query [eg: herbivore IS-A mammal]</label>
+				<input type="text" name="parent" class="w3-input" id="query" >
+			</div>
+
+			<button type="button" class="w3-btn w3-green w3-margin" id="submitQuery">Query Command</button>
+		</form>
+		
+	</div>
+
+	<div class="w3-third">
+		<h4 class="w3-green w3-margin w3-padding">Data Output stream</h4>
+
+		<h5 class="w3-center">Longest Path First</h5>
+		<hr>
+		<div class="" id="output">
+			
+		</div>
+
+		<h5 class="w3-center">Inferential Distance</h5>
+		<hr>
+		<div id="Preferred">
+			
+		</div>
+
+		<h5 class="w3-center">Shortest Path</h5>
+		<hr>
+		<div id="short">
+			
+		</div>
+		
+	</div>
+</main>
+	<script type="text/javascript" src="index.js"></script>
+</body>
+</html>

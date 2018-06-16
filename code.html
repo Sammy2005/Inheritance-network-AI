@@ -1,0 +1,184 @@
+﻿
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Index</title>
+	<link rel="stylesheet" href="">
+	<style type="text/css">
+		body .content {
+			margin: 0 auto !important;
+			width: 85%;
+		}
+		.left{
+			width: 46%;
+			border-right: solid 2px black;
+			min-height: 300px;
+			display: inline-block;
+			vertical-align: top;
+		}
+		.right{
+			width: 46%;
+			min-height: 300px;
+			display: inline-block;
+			vertical-align: top;
+		}
+		.clause {
+			margin: 5px;
+			background-color: #eeeeee;
+			padding:3px;
+		}
+		.delete {
+			margin-left: 100px;
+		}
+		input, h4 {
+			display: inline-block;
+		}
+	</style>
+</head>
+<body>
+	<div class="content">
+		<div class="left">
+			<h3>ADD CLAUSE HERE</h3>
+			<input type="text" id="term">
+			<button type="button" onclick="AddFact()">Add Litteral</button>
+			<div id="allclause">
+			</div>
+		</div>
+		<div class="right">
+			<h3>ADD QUERY HERE</h3>
+			<h4>¬</h4><input type="text" id="query" >
+			<button type="button" onclick="resolveQuery()">OK</button>
+			<div id="result">
+			</div>
+		</div>
+	</div>
+	<script>
+        
+        alert("Please enter your clauses with no spaces in the form '#car,cat' with the # being the negation. \nFor the query please don't use a negation symbol, it is predefined");
+
+      
+        (function(){
+            // Stored base
+            knowledgeBase = []
+            fact = []
+            commitementStandard= []
+            inferanceRules =[]
+            counter = 0
+        })();
+
+        //Resolving Query
+        function resolveQuery(){
+            var question = document.getElementById("query").value
+            var r = document.getElementById("result")
+            res = true
+            var qAll = question.split(',')
+            qAll.forEach( function(q, i) {
+                console.log("==== iteration for query:",q,"and index :",i,"====")
+                res = res && resolve(q)
+                console.log("=====> res ",i,":",res)
+            })
+
+            if(res==true){
+                res = "SOLVED"
+            }else{
+                res = "NOT SOLVED"
+            }
+
+            r.innerHTML = res;
+        }
+
+        // Adding new fact
+        function AddFact(){
+            var terms = document.getElementById("term").value
+            var ts = Fact(terms)
+            if(ts!==false){
+                knowledgeBase.push(ts)
+                var div = document.createElement("P")
+                var dd = document.createTextNode(terms)
+                div.setAttribute("id", counter)
+                div.setAttribute("class", "clause")
+                div.innerHTML = "["+terms + "]  <button type='button' class='delete' onclick='deleting("+counter+");'>delete</butto>"
+                console.log(div)
+                document.getElementById("allclause").appendChild(div)
+                counter++;
+                console.log("base ", knowledgeBase)
+            }else{
+                alert("Please verify your input"+terms)
+            }
+
+        }
+
+        // fact's class
+        function Fact(inp){
+            this.neg = []
+            this.pos = []
+            var arrayOfClause = inp.split(",")
+            arrayOfClause.forEach( function(element, index) {
+                if (element.charAt(0) === "#"){
+                    this.neg.push(element)
+                } else {
+                    this.pos.push(element)
+                }
+            })
+            if(this.pos.length>1 || (this.pos.length === 0 && this.neg.length > 0) || this.pos[0] === ''){
+                return false
+            }else{
+                return {neg: this.neg, pos: this.pos}
+            }
+        }
+
+        //Function for questioning
+        function resolve(q) {
+            var pass = []
+            res = true
+            check = false
+            knowledgeBase.forEach( function(element, index) {
+                // if the query === element
+                if(element.pos[0]===q){
+                    if(check === false) {
+                        pass.push(element)
+                        // if it's an atom
+                        if(element.neg.length === 0) {
+                            check = true
+                            return res = true
+                        }// else: it is a clause so we need to resolve all his negative element
+                        else {
+                            element.neg.forEach( function(e, i) {
+                                console.log("element and index :",e.substr(1)," ",i)
+                                console.log("finding the negative element", e)
+                                console.log("new term to find : ",e.substr(1))
+                                var wait =  resolve(e.substr(1)) // Recursion
+                                res = res && wait
+                                console.log("res && wait :",res)
+                            })
+                        }
+                    } else {
+                        return true
+                    }
+                } // element !== query
+                else {
+                    if(pass.length === 0 && knowledgeBase.length === (index+1) ){
+                        console.log("negative element not found", element.pos[0], "false")
+                        res = false
+                        console.log("pass.length === 0",res)
+                    }
+                }
+            })
+            return res
+        }
+
+        function deleting(id) {
+            var element = document.getElementById(id)
+            element.parentNode.removeChild(element)
+            var elementId = parseInt(id,10)
+            knowledgeBase[elementId].pos = []
+            knowledgeBase[elementId].neg = []
+        }
+
+    </script>
+
+
+</body>
+</html>
